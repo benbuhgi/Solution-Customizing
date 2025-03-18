@@ -11,9 +11,8 @@ const BodyContent = () => {
     return (
         <div className="repgen">
             <div className="body-content-container">
-                {/* Sidebar Container (Hidden by Default) */}
                 <div className={`sidebar-container ${isSidebarVisible ? "visible" : "hidden"}`}>
-                    {isSidebarVisible && (  // Show the button inside only when the sidebar is visible
+                    {isSidebarVisible && ( 
                         <div className='sidebar-icons-ham-icon-wrapper' onClick={toggleSidebar}>
                             <div className="ham-menu-icon active">
                                 <span></span>
@@ -23,12 +22,10 @@ const BodyContent = () => {
                         </div>
                     )}
                 </div>
-
-                {/* Sidebar Separator (Main Content Expands When Sidebar is Hidden) */}
                 <div className={`sidebar-main-separator ${isSidebarVisible ? "with-sidebar" : "full-width"}`}>
                     <div className="navbar-main-separator">
                         <div className='navbar-container'>
-                            {!isSidebarVisible && (  // Show the button outside only when the sidebar is hidden
+                            {!isSidebarVisible && (  
                                 <div className='sidebar-icons-ham-icon-wrapper' onClick={toggleSidebar}>
                                     <div className="ham-menu-icon">
                                         <span></span>
@@ -39,8 +36,6 @@ const BodyContent = () => {
                             )}
                         </div>
                     </div>
-
-                    {/* Main Content */}
                     <div className="main-content-container">
                         <div className="welres-container">
                             <h1 className="welc-text">Hello, Crusch K.</h1>
