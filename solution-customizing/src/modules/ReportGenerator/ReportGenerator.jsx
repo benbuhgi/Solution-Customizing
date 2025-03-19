@@ -3,9 +3,59 @@ import "./styles/ReportGenerator.css";
 
 const BodyContent = () => {
     const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+    const [messages, setMessages] = useState([]); // Store chat messages
+    const [inputText, setInputText] = useState(""); // Store input text
 
     const toggleSidebar = () => {
         setIsSidebarVisible(!isSidebarVisible);
+    };
+
+    const handleSendMessage = () => {
+        if (inputText.trim() !== "") {
+            // Add user message to chat history
+            setMessages([...messages, { sender: "user", text: inputText, type: "text" }]);
+            setInputText(""); // Clear input field
+
+            // Simulate bot response
+            setTimeout(() => {
+                const response = generateResponse(inputText);
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    response
+                ]);
+            }, 1000); // Delay to mimic real chatbot behavior
+        }
+    };
+
+    // Function to generate a bot response based on the prompt
+    const generateResponse = (prompt) => {
+        if (prompt.toLowerCase().includes("financial report")) {
+            return {
+                sender: "bot",
+                type: "table",
+                title: "Financial Report: January 2024 (Excluding Refunds)",
+                tables: [
+                    {
+                        title: "Revenue Breakdown",
+                        headers: ["Category", "Amount (PHP)"],
+                        rows: [
+                            ["Product Sales", "4,500,000"],
+                            ["Service Income", "750,000"],
+                            ["Other Revenue", "200,000"],
+                            ["Total", "5,450,000"]
+                        ]
+                    },
+                    {
+                        title: "Expense Breakdown",
+                        headers: ["Category", "Amount (PHP)"],
+                        rows: [
+                            ["Salaries", "1,500,000"]
+                        ]
+                    }
+                ]
+            };
+        }
+        return { sender: "bot", text: "I'm not sure how to answer that yet, but I'm learning!", type: "text" };
     };
 
     return (
@@ -13,7 +63,6 @@ const BodyContent = () => {
             <div className="body-content-container">
                 {/* Sidebar */}
                 <div className={`sidebar-container ${isSidebarVisible ? "visible" : ""}`}>
-                    {/* Close (X) button inside the sidebar */}
                     {isSidebarVisible && (
                         <div className='sidebar-icons-ham-icon-wrapper' onClick={toggleSidebar}>
                             <div className="ham-menu-icon active">
@@ -29,7 +78,6 @@ const BodyContent = () => {
                 <div className="sidebar-main-separator">
                     <div className="navbar-main-separator">
                         <div className='navbar-container'>
-                            {/* Show hamburger ONLY when sidebar is hidden */}
                             {!isSidebarVisible && (
                                 <div className='sidebar-icons-ham-icon-wrapper' onClick={toggleSidebar}>
                                     <div className="ham-menu-icon">
@@ -42,14 +90,68 @@ const BodyContent = () => {
                         </div>
                     </div>
 
-                    {/* Main Content */}
+                    {/* Main Chat Area */}
                     <div className="main-content-container">
-                        <div className="welres-container">
-                            <h1 className="welc-text">Hello, Crusch K.</h1>
+                        {/* Chat History */}
+                        <div className="chat-history">
+                            {messages.length === 0 ? (
+                                <div className="welres-container">
+                                    <h1 className="welc-text">Hello, Crusch K.</h1>
+                                </div>
+                            ) : (
+                                messages.map((msg, index) => (
+                                    <div key={index} className={`chat-message ${msg.sender}`}>
+                                        {msg.type === "text" ? (
+                                            msg.text
+                                        ) : (
+                                            <div className="chat-table-response">
+                                                <h3>{msg.title}</h3>
+                                                {msg.tables.map((table, i) => (
+                                                    <div key={i}>
+                                                        <h4>{table.title}</h4>
+                                                        <table className="chat-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    {table.headers.map((header, j) => (
+                                                                        <th key={j}>{header}</th>
+                                                                    ))}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {table.rows.map((row, k) => (
+                                                                    <tr key={k}>
+                                                                        {row.map((cell, l) => (
+                                                                            <td key={l}>{cell}</td>
+                                                                        ))}
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))
+                            )}
                         </div>
+
+
+                        {/* Input and Send Button */}
                         <div className="textbar-container">
-                            <textarea placeholder="Ask anything" className="text-input" />
-                            <img src="../../icons/repgen/sendmsg.png" className="sendmsg-icon" />
+                            <textarea
+                                placeholder="Ask anything"
+                                className="text-input"
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
+                            />
+                            <img
+                                src="../../icons/repgen/sendmsg.png"
+                                className="sendmsg-icon"
+                                onClick={handleSendMessage}
+                                alt="Send"
+                            />
                         </div>
                     </div>
                 </div>

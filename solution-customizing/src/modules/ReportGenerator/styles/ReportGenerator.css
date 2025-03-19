@@ -1,4 +1,5 @@
 /* REMINDER! All of your elements must use your unique namespace '.repgen' at the start to avoid leaking */
+
 .repgen {
   display: flex;
   width: 100%;
@@ -45,6 +46,7 @@
 
 .repgen .sidebar-container.visible {
   width: 20%;
+  border-radius: 5px;
 }
 
 .repgen .sidebar-main-separator {
@@ -55,11 +57,9 @@
   transition: width 0.3s ease-in-out;
 }
 
-.repgen .sidebar-container.visible+.sidebar-main-separator {
+.repgen .sidebar-container.visible+.repgen .sidebar-main-separator {
   width: 80%;
-  /* Adjust this to your preference */
 }
-
 
 .repgen .navbar-main-separator {
   display: flex;
@@ -69,7 +69,6 @@
   align-items: center;
   width: 100%;
   min-height: 50px;
-  /* Add a min height to prevent collapse */
 }
 
 .repgen .navbar-container {
@@ -167,16 +166,106 @@
   display: none;
 }
 
-
-
 .repgen .sendmsg-icon {
   width: 32px;
+  cursor: pointer; 
+  transition: opacity 0.2s ease-in-out; 
 }
 
+.repgen .sendmsg-icon:hover {
+  opacity: 0.7; 
+}
 
+.repgen .chat-history {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.repgen .chat-history::-webkit-scrollbar {
+  display: none;
+}
+
+.repgen .chat-message {
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.repgen .chat-message.user {
+  align-self: flex-end;
+  background-color: #F7F9FB;
+  text-align: right;
+}
+
+.repgen .chat-message.bot {
+  align-self: flex-start;
+}
+
+.repgen .chat-table-response {
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.repgen .chat-table-response h3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.repgen .chat-table-response h4 {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.repgen .chat-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 5px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.repgen .chat-table th,
+.repgen .chat-table td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
+
+.repgen .chat-table th {
+  background-color: #00a8a8;
+  color: white;
+}
+
+.repgen .chat-table td {
+  background-color: #E1FFF6;
+}
+
+.repgen .chat-table thead tr:first-child th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.repgen .chat-table thead tr:first-child th:last-child {
+  border-top-right-radius: 10px;
+}
+
+.repgen .chat-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+.repgen .chat-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}
 
 /* Responsive CSS */
-
 @media only screen and (max-width: 768px) {
   .repgen .body-content-container {
     flex-direction: column;
@@ -198,5 +287,4 @@
   .repgen .sidebar-icons-hamburger-container {
     display: block;
   }
-
 }
