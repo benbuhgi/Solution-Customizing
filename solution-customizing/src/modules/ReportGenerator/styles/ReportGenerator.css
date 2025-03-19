@@ -116,14 +116,15 @@
     transform: translate(-50%, -55%) rotate(-45deg);
   }
 
-  .repgen .main-content-container{
+  .repgen .main-content-container {
     display: flex;
     flex-direction: column;
-    align-items: center;  
+    align-items: center;
     justify-content: center;
     height: 95%;
-    width: 100%;
-  }
+    width: 75%;
+    margin: 0 auto; /* Center horizontally */
+}
 
   .repgen .textbar-container{
     align-items: center;
@@ -151,6 +152,7 @@
     resize: none;
     overflow-y: auto;
     word-wrap: break-word;
+    padding-top: 15px;
   }
 
   .repgen .text-input::-webkit-scrollbar{
