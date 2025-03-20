@@ -33,6 +33,7 @@ const BodyContent = () => {
             return {
                 sender: "bot",
                 type: "table",
+                text: "Sure! Here's the financial report for January 2024 (excluding refunds). I've also included a downloadable Excel file for your reference. Let me know if you need any additional details or insights!",
                 title: "Financial Report: January 2024 (Excluding Refunds)",
                 tables: [
                     {
@@ -64,11 +65,15 @@ const BodyContent = () => {
                 {/* Sidebar */}
                 <div className={`sidebar-container ${isSidebarVisible ? "visible" : ""}`}>
                     {isSidebarVisible && (
-                        <div className='sidebar-icons-ham-icon-wrapper' onClick={toggleSidebar}>
-                            <div className="ham-menu-icon active">
+                        <div className='sidebar-icons-ham-icon-wrapper' >
+                            <div className="ham-menu-icon active" onClick={toggleSidebar}>
                                 <span></span>
                                 <span></span>
                                 <span></span>
+                            </div>
+                            <div className="srch-new-icon">
+                                <img src="../../icons/repgen/search.png" alt="Search" className="search-icon"/>
+                                <img src="../../icons/repgen/newchat.png" alt="New" className="newchat-icon"/>
                             </div>
                         </div>
                     )}
@@ -105,6 +110,7 @@ const BodyContent = () => {
                                             msg.text
                                         ) : (
                                             <div className="chat-table-response">
+                                                <p>{msg.text}</p>
                                                 <h3>{msg.title}</h3>
                                                 {msg.tables.map((table, i) => (
                                                     <div key={i}>

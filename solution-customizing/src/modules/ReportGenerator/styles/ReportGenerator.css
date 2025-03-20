@@ -79,8 +79,18 @@
 }
 
 .repgen .sidebar-icons-ham-icon-wrapper {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   margin: 10px;
+  border: 1px solid gray; 
+}
+
+.repgen .sidebar-container.visible .sidebar-icons-ham-icon-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+  border: none;
 }
 
 .repgen .ham-menu-icon {
@@ -90,6 +100,16 @@
   height: 1.5rem;
   width: 1.5rem;
   cursor: pointer;
+}
+
+.repgen .newchat-icon {
+  width: 24px;
+  margin-right: 10px;
+}
+
+.repgen .search-icon {
+  width: 24px;
+  margin-right: 10px;
 }
 
 .repgen .ham-menu-icon span {
@@ -130,7 +150,6 @@
   height: 100%;
   width: 75%;
   margin: 0 auto;
-  /* Center horizontally */
 }
 
 .repgen .textbar-container {
@@ -212,15 +231,22 @@
   margin-top: 10px;
 }
 
+.repgen .chat-message p {
+  font-size: 12px;
+  color: #000000;
+  margin-bottom: 10px;
+}
+
 .repgen .chat-table-response h3 {
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .repgen .chat-table-response h4 {
   font-size: 14px;
-  margin-bottom: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   color: #333;
 }
 
