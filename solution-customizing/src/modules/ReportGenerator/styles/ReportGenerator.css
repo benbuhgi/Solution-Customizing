@@ -24,6 +24,8 @@
 
 .repgen .welres-container {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   color: #00A8A8;
   margin-bottom: 100px;
 }
@@ -84,6 +86,7 @@
   align-items: center;
   margin: 10px;
   border: 1px solid gray; 
+  cursor: default;
 }
 
 .repgen .sidebar-container.visible .sidebar-icons-ham-icon-wrapper {
@@ -105,11 +108,13 @@
 .repgen .newchat-icon {
   width: 24px;
   margin-right: 10px;
+  cursor: pointer;
 }
 
 .repgen .search-icon {
   width: 24px;
   margin-right: 10px;
+  cursor: pointer
 }
 
 .repgen .ham-menu-icon span {
@@ -159,7 +164,7 @@
   padding: 10px;
   margin-left: 20px;
   margin-right: 20px;
-  width: 95%;
+  width: 100%;
   height: auto;
   justify-content: space-between;
   border-radius: 15px;
@@ -197,6 +202,7 @@
 
 .repgen .chat-history {
   display: flex;
+  width: 100%;
   flex-direction: column;
   gap: 10px;
   padding: 15px;
@@ -226,28 +232,27 @@
 }
 
 .repgen .chat-table-response {
-  padding: 10px;
   border-radius: 8px;
   margin-top: 10px;
 }
 
 .repgen .chat-message p {
-  font-size: 12px;
+  font-size: 14px;
   color: #000000;
   margin-bottom: 10px;
 }
 
 .repgen .chat-table-response h3 {
-  font-size: 16px;
+  font-size: 22px;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
 .repgen .chat-table-response h4 {
-  font-size: 14px;
+  font-size: 18px;
   margin-top: 10px;
   margin-bottom: 10px;
-  color: #333;
+  color: #000000;
 }
 
 .repgen .chat-table {
@@ -290,6 +295,16 @@
 .repgen .chat-table tbody tr:last-child td:last-child {
   border-bottom-right-radius: 10px;
 }
+
+.repgen .srch-new-icon {
+  display: flex;
+  transition: 0.3s ease;  
+}
+
+.repgen .welc-text {
+  text-align: center;
+}
+
 
 /* Responsive CSS */
 @media only screen and (max-width: 768px) {
