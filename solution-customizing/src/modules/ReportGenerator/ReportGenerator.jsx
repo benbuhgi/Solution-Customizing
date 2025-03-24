@@ -10,6 +10,13 @@ const BodyContent = () => {
         setIsSidebarVisible(!isSidebarVisible);
     };
 
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text)
+            .then(() => alert("Copied to clipboard!"))
+            .catch(err => console.error("Failed to copy:", err));
+    };
+    
+
     const handleSendMessage = () => {
         if (inputText.trim() !== "") {
             // Add user message to chat history
@@ -35,6 +42,8 @@ const BodyContent = () => {
                 type: "table",
                 text: "Sure! Here's the financial report for January 2024 (excluding refunds). I've also included a downloadable Excel file for your reference. Let me know if you need any additional details or insights!",
                 title: "Financial Report: January 2024 (Excluding Refunds)",
+                title2: "Summary",
+                text2: "Total Revenue: PHP 5,450,000 | Total Expenses: PHP 3,120,000 | Net Income: PHP 2,330,000 | Refunds Excluded: PHP 150,000",
                 tables: [
                     {
                         title: "Revenue Breakdown",
@@ -110,7 +119,7 @@ const BodyContent = () => {
                                             msg.text
                                         ) : (
                                             <div className="chat-table-response">
-                                                <p>{msg.text}</p>
+                                                <p className="res-head">{msg.text}</p>
                                                 <h3>{msg.title}</h3>
                                                 {msg.tables.map((table, i) => (
                                                     <div key={i}>
@@ -135,6 +144,17 @@ const BodyContent = () => {
                                                         </table>
                                                     </div>
                                                 ))}
+                                                <p className="res-foot">{msg.title2}</p>
+                                                <p className="foot-cont">{msg.text2}</p>
+                                                <div className="copy-icon-wrapper" onClick={() => copyToClipboard(`${msg.title}\n${msg.text2}`)}>
+    <img 
+        src="../../icons/repgen/copy.png" 
+        alt="Copy" 
+        className="copy-icon"
+    />
+    <span className="tooltip">Copy Summary</span>
+</div>
+
                                             </div>
                                         )}
                                     </div>

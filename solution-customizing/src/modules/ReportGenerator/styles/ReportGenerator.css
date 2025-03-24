@@ -236,8 +236,22 @@
   margin-top: 10px;
 }
 
-.repgen .chat-message p {
-  font-size: 14px;
+.repgen .res-head {
+  font-size: 15px;
+  color: #000000;
+  margin-bottom: 10px;
+}
+
+.repgen .res-foot {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.repgen .foot-cont {
+  font-size: 15px;
   color: #000000;
   margin-bottom: 10px;
 }
@@ -303,6 +317,44 @@
 
 .repgen .welc-text {
   text-align: center;
+}
+
+.repgen .copy-icon-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.repgen .copy-icon {
+  width: 24px; /* Adjust as needed */
+  height: 24px;
+  transition: transform 0.2s ease-in-out, filter 0.2s;
+}
+
+.repgen .copy-icon:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+.repgen .tooltip {
+  position: absolute;
+  bottom: 120%; 
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.repgen .copy-icon-wrapper:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
 }
 
 
