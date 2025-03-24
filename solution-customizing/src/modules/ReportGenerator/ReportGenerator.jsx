@@ -3,8 +3,8 @@ import "./styles/ReportGenerator.css";
 
 const BodyContent = () => {
     const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-    const [messages, setMessages] = useState([]); // Store chat messages
-    const [inputText, setInputText] = useState(""); // Store input text
+    const [messages, setMessages] = useState([]); 
+    const [inputText, setInputText] = useState(""); 
 
     const toggleSidebar = () => {
         setIsSidebarVisible(!isSidebarVisible);
@@ -19,22 +19,19 @@ const BodyContent = () => {
 
     const handleSendMessage = () => {
         if (inputText.trim() !== "") {
-            // Add user message to chat history
             setMessages([...messages, { sender: "user", text: inputText, type: "text" }]);
-            setInputText(""); // Clear input field
+            setInputText(""); 
 
-            // Simulate bot response
             setTimeout(() => {
                 const response = generateResponse(inputText);
                 setMessages((prevMessages) => [
                     ...prevMessages,
                     response
                 ]);
-            }, 1000); // Delay to mimic real chatbot behavior
+            }, 1000); 
         }
     };
 
-    // Function to generate a bot response based on the prompt
     const generateResponse = (prompt) => {
         if (prompt.toLowerCase().includes("financial report")) {
             return {
@@ -116,7 +113,14 @@ const BodyContent = () => {
                                 messages.map((msg, index) => (
                                     <div key={index} className={`chat-message ${msg.sender}`}>
                                         {msg.type === "text" ? (
-                                            msg.text
+                                            <div className="message-text">
+                                                {msg.text.split("\n").map((line, i) => (
+                                                    <React.Fragment key={i}>
+                                                        {line}
+                                                        <br />
+                                                    </React.Fragment>
+                                                ))}
+                                            </div>
                                         ) : (
                                             <div className="chat-table-response">
                                                 <p className="res-head">{msg.text}</p>
@@ -147,13 +151,9 @@ const BodyContent = () => {
                                                 <p className="res-foot">{msg.title2}</p>
                                                 <p className="foot-cont">{msg.text2}</p>
                                                 <div className="copy-icon-wrapper" onClick={() => copyToClipboard(`${msg.title}\n${msg.text2}`)}>
-    <img 
-        src="../../icons/repgen/copy.png" 
-        alt="Copy" 
-        className="copy-icon"
-    />
-    <span className="tooltip">Copy Summary</span>
-</div>
+                                                    <img src="../../icons/repgen/copy.png" alt="Copy" className="copy-icon"/>
+                                                    <span className="tooltip">Copy Summary</span>
+                                                </div>
 
                                             </div>
                                         )}
@@ -170,7 +170,12 @@ const BodyContent = () => {
                                 className="text-input"
                                 value={inputText}
                                 onChange={(e) => setInputText(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter" && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleSendMessage(); 
+                                    }
+                                }}
                             />
                             <img
                                 src="../../icons/repgen/sendmsg.png"

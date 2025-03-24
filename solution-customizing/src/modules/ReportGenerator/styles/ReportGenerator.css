@@ -326,7 +326,7 @@
 }
 
 .repgen .copy-icon {
-  width: 24px; /* Adjust as needed */
+  width: 24px;
   height: 24px;
   transition: transform 0.2s ease-in-out, filter 0.2s;
 }
@@ -365,6 +365,7 @@
     padding: 0.5rem;
   }
 
+  /* Hide sidebar ONLY for small screens, not when zoomed */
   .repgen .sidebar-container {
     display: none;
   }
