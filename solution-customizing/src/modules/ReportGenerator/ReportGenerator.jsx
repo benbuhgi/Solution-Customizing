@@ -150,12 +150,17 @@ const BodyContent = () => {
                                                 ))}
                                                 <p className="res-foot">{msg.title2}</p>
                                                 <p className="foot-cont">{msg.text2}</p>
+                                                <div className="action-buttons">
                                                 <div className="copy-icon-wrapper" onClick={() => copyToClipboard(`${msg.title}\n${msg.text2}`)}>
                                                     <img src="../../icons/repgen/copy.png" alt="Copy" className="copy-icon"/>
                                                     <span className="tooltip">Copy Summary</span>
                                                 </div>
-
+                                                <div className="dl-icon-wrapper">
+                                                    <img src="../../icons/repgen/download.png" alt="Download" className="download-icon"/>
+                                                    <span className="tooltip">Download Excel</span>
+                                                </div>
                                             </div>
+                                        </div>
                                         )}
                                     </div>
                                 ))

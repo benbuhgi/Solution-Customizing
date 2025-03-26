@@ -85,7 +85,7 @@
   justify-content: space-between;
   align-items: center;
   margin: 10px;
-  border: 1px solid gray; 
+  border: none;
   cursor: default;
 }
 
@@ -121,7 +121,7 @@
   display: block;
   height: 0.1rem;
   width: 100%;
-  background-color: rgb(124, 124, 124);
+  background-color: rgb(0, 0, 0);
   transition: 0.3s ease;
 }
 
@@ -155,13 +155,15 @@
   height: 100%;
   width: 75%;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .repgen .textbar-container {
   align-items: center;
   display: flex;
   background-color: #F7F9FB;
-  padding: 10px;
+  padding-right: 10px;
+  padding-left: 10px;
   margin-left: 20px;
   margin-right: 20px;
   width: 100%;
@@ -183,7 +185,17 @@
   resize: none;
   overflow-y: auto;
   word-wrap: break-word;
+  padding-top: 10px;
+  font-size: 16px;
+  font-family: inter;
   padding-top: 15px;
+}
+
+.repgen .text-input::placeholder {
+  color: #000000; 
+  opacity: 1;
+  font-size: 16px;
+  font-family: inter;
 }
 
 .repgen .text-input::-webkit-scrollbar {
@@ -326,8 +338,8 @@
 }
 
 .repgen .copy-icon {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   transition: transform 0.2s ease-in-out, filter 0.2s;
 }
 
@@ -336,23 +348,56 @@
   filter: brightness(1.2);
 }
 
-.repgen .tooltip {
-  position: absolute;
-  bottom: 120%; 
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.75);
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  white-space: nowrap;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
+.repgen .copy-icon-wrapper .tooltip,
+.repgen .dl-icon-wrapper .tooltip {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    /* Ensure tooltip stays within viewport */
+    min-width: max-content;
+    max-width: 200px;
+    z-index: 100;
 }
 
 .repgen .copy-icon-wrapper:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.repgen .action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.repgen .dl-icon-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.repgen .download-icon {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s ease-in-out, filter 0.2s;
+}
+
+.repgen .download-icon:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+.repgen .dl-icon-wrapper:hover .tooltip {
   visibility: visible;
   opacity: 1;
 }
@@ -365,9 +410,9 @@
     padding: 0.5rem;
   }
 
-  /* Hide sidebar ONLY for small screens, not when zoomed */
   .repgen .sidebar-container {
-    display: none;
+    width: 5rem; 
+    overflow: hidden;
   }
 
   .repgen .header-content-container {
