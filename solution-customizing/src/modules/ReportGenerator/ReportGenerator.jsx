@@ -4,7 +4,9 @@ import "./styles/ReportGenerator.css";
 const BodyContent = () => {
     const [isSidebarVisible, setIsSidebarVisible] = useState(false);
     const [messages, setMessages] = useState([]); 
-    const [inputText, setInputText] = useState(""); 
+    const [inputText, setInputText] = useState("");
+    const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const [searchInput, setSearchInput] = useState(""); 
 
     const toggleSidebar = () => {
         setIsSidebarVisible(!isSidebarVisible);
@@ -15,7 +17,6 @@ const BodyContent = () => {
             .then(() => alert("Copied to clipboard!"))
             .catch(err => console.error("Failed to copy:", err));
     };
-    
 
     const handleSendMessage = () => {
         if (inputText.trim() !== "") {
@@ -68,24 +69,49 @@ const BodyContent = () => {
     return (
         <div className="repgen">
             <div className="body-content-container">
-                {/* Sidebar */}
                 <div className={`sidebar-container ${isSidebarVisible ? "visible" : ""}`}>
                     {isSidebarVisible && (
-                        <div className='sidebar-icons-ham-icon-wrapper' >
-                            <div className="ham-menu-icon active" onClick={toggleSidebar}>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                            <div className="srch-new-icon">
-                                <img src="../../icons/repgen/search.png" alt="Search" className="search-icon"/>
-                                <img src="../../icons/repgen/newchat.png" alt="New" className="newchat-icon"/>
-                            </div>
+                        <div>
+                            {isSearchVisible ? (
+                                <div className={`search-bar-container ${isSearchVisible ? "visible" : ""}`}>
+                                    <input
+                                        type="text"
+                                        placeholder="Search..."
+                                        className="search-input"
+                                        value={searchInput}
+                                        onChange={(e) => setSearchInput(e.target.value)}
+                                    />
+                                    <div className="ham-menu-icon active" onClick={() => {
+                                        setIsSearchVisible(false);
+                                        setSearchInput("");
+                                    }}>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className='sidebar-icons-ham-icon-wrapper'>
+                                    <div className="ham-menu-icon active" onClick={toggleSidebar}>
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                    <div className="srch-new-icon">
+                                        <img 
+                                            src="../../icons/repgen/search.png" 
+                                            alt="Search" 
+                                            className="search-icon"
+                                            onClick={() => setIsSearchVisible(true)}
+                                        />
+                                        <img src="../../icons/repgen/newchat.png" alt="New" className="newchat-icon"/>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
 
-                {/* Main Content */}
                 <div className="sidebar-main-separator">
                     <div className="navbar-main-separator">
                         <div className='navbar-container'>
@@ -101,9 +127,7 @@ const BodyContent = () => {
                         </div>
                     </div>
 
-                    {/* Main Chat Area */}
                     <div className="main-content-container">
-                        {/* Chat History */}
                         <div className="chat-history">
                             {messages.length === 0 ? (
                                 <div className="welres-container">
@@ -151,24 +175,22 @@ const BodyContent = () => {
                                                 <p className="res-foot">{msg.title2}</p>
                                                 <p className="foot-cont">{msg.text2}</p>
                                                 <div className="action-buttons">
-                                                <div className="copy-icon-wrapper" onClick={() => copyToClipboard(`${msg.title}\n${msg.text2}`)}>
-                                                    <img src="../../icons/repgen/copy.png" alt="Copy" className="copy-icon"/>
-                                                    <span className="tooltip">Copy Summary</span>
-                                                </div>
-                                                <div className="dl-icon-wrapper">
-                                                    <img src="../../icons/repgen/download.png" alt="Download" className="download-icon"/>
-                                                    <span className="tooltip">Download Excel</span>
+                                                    <div className="copy-icon-wrapper" onClick={() => copyToClipboard(`${msg.title}\n${msg.text2}`)}>
+                                                        <img src="../../icons/repgen/copy.png" alt="Copy" className="copy-icon"/>
+                                                        <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Copy Summary</span>
+                                                    </div>
+                                                    <div className="dl-icon-wrapper">
+                                                        <img src="../../icons/repgen/download.png" alt="Download" className="download-icon"/>
+                                                        <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Download Excel</span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
                                         )}
                                     </div>
                                 ))
                             )}
                         </div>
 
-
-                        {/* Input and Send Button */}
                         <div className="textbar-container">
                             <textarea
                                 placeholder="Ask anything"
