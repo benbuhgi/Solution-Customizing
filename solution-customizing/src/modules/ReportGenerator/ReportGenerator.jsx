@@ -73,7 +73,8 @@ const BodyContent = () => {
                     {isSidebarVisible && (
                         <div>
                             {isSearchVisible ? (
-                                <div className={`search-bar-container ${isSearchVisible ? "visible" : ""}`}>
+                                <div className={`search-bar-container ${isSearchVisible ? "visible" : ""}`}
+                                    onTransitionEnd={() => !isSearchVisible && setSearchInput("")}>
                                     <input
                                         type="text"
                                         placeholder="Search..."
@@ -81,10 +82,7 @@ const BodyContent = () => {
                                         value={searchInput}
                                         onChange={(e) => setSearchInput(e.target.value)}
                                     />
-                                    <div className="ham-menu-icon active" onClick={() => {
-                                        setIsSearchVisible(false);
-                                        setSearchInput("");
-                                    }}>
+                                    <div className="ham-menu-icon active" onClick={() => setIsSearchVisible(false)}>
                                         <span></span>
                                         <span></span>
                                         <span></span>

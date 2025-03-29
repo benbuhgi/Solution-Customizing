@@ -36,18 +36,26 @@
 
 .repgen .sidebar-container {
   width: 0;
-  overflow: hidden;
+  min-width: 0;
   height: 100%;
-  display: flex;
   background-color: #C9E7E5;
+  display: flex;
   flex-direction: column;
-  transition: width 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem 0 0 0.5rem;
+  /* Ensure complete hiding when closed */
+  border: none;
+  box-shadow: none;
 }
 
 .repgen .sidebar-container.visible {
   width: 20%;
+  min-width: 250px;
   border-radius: 5px;
 }
+
 
 .repgen .sidebar-main-separator {
   flex-grow: 1;
@@ -415,6 +423,7 @@
   width: 0;
   overflow: hidden;
   background-color: #C9E7E5;
+  transition: width 0.3s ease-in-out, opacity 0.2s ease-in-out;
   position: absolute;
   left: 0;
   top: 0;
@@ -437,6 +446,7 @@
   background-color: #abd8d5;
   color: #000000;
   min-width: 150px;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .repgen .search-bar-container.visible .search-input {
@@ -459,9 +469,9 @@
     padding: 0.5rem;
   }
 
-  .repgen .sidebar-container {
-    width: 5rem; 
-    overflow: hidden;
+  .repgen .sidebar-container.visible {
+    width: 80%;
+    min-width: 0; /* Remove min-width on mobile */
   }
 
   .repgen .header-content-container {
