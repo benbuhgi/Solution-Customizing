@@ -425,14 +425,13 @@
   overflow: hidden;
   background-color: #C9E7E5;
   transition: width 0.3s ease-in-out, opacity 0.2s ease-in-out;
-  position: absolute;
-  left: 0;
-  top: 0;
+  position: relative; /* Changed from absolute to relative */
   opacity: 0;
+  margin: 10px; /* Added to match sidebar button spacing */
 }
 
 .repgen .search-bar-container.visible {
-  width: 100%;
+  width: 90%;
   opacity: 1;
 }
 

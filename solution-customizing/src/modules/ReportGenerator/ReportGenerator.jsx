@@ -31,6 +31,24 @@ const BodyContent = () => {
         ]
     };
 
+    // Filter chat history based on search input
+    const filterChatHistory = (history) => {
+        if (!searchInput.trim()) return history;
+
+        const searchTerm = searchInput.toLowerCase();
+        return Object.keys(history).reduce((filtered, period) => {
+            const filteredItems = history[period].filter(item => 
+                item.title.toLowerCase().includes(searchTerm))
+            if (filteredItems.length > 0) {
+                filtered[period] = filteredItems;
+            }
+            return filtered;
+        }, {});
+    };
+
+    // Get filtered chat history
+    const filteredChatHistory = filterChatHistory(chatHistory);
+
     const toggleSidebar = () => {
         setIsSidebarVisible(!isSidebarVisible);
     };
@@ -133,38 +151,50 @@ const BodyContent = () => {
                             )}
                             
                             <div className="sidebar-content">
-                                <div className="history-section">
-                                    <h3 className="history-period">Today</h3>
-                                    <ul className="history-list">
-                                        {chatHistory.today.map(chat => (
-                                            <li key={chat.id} className="history-item">
-                                                {chat.title}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                                {Object.keys(filteredChatHistory).length > 0 ? (
+                                    <>
+                                        {filteredChatHistory.today && (
+                                            <div className="history-section">
+                                                <h3 className="history-period">Today</h3>
+                                                <ul className="history-list">
+                                                    {filteredChatHistory.today.map(chat => (
+                                                        <li key={chat.id} className="history-item">
+                                                            {chat.title}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
 
-                                <div className="history-section">
-                                    <h3 className="history-period">Previous 7 Days</h3>
-                                    <ul className="history-list">
-                                        {chatHistory.previous7Days.map(chat => (
-                                            <li key={chat.id} className="history-item">
-                                                {chat.title}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                                        {filteredChatHistory.previous7Days && (
+                                            <div className="history-section">
+                                                <h3 className="history-period">Previous 7 Days</h3>
+                                                <ul className="history-list">
+                                                    {filteredChatHistory.previous7Days.map(chat => (
+                                                        <li key={chat.id} className="history-item">
+                                                            {chat.title}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
 
-                                <div className="history-section">
-                                    <h3 className="history-period">Previous 30 Days</h3>
-                                    <ul className="history-list">
-                                        {chatHistory.previous30Days.map(chat => (
-                                            <li key={chat.id} className="history-item">
-                                                {chat.title}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                                        {filteredChatHistory.previous30Days && (
+                                            <div className="history-section">
+                                                <h3 className="history-period">Previous 30 Days</h3>
+                                                <ul className="history-list">
+                                                    {filteredChatHistory.previous30Days.map(chat => (
+                                                        <li key={chat.id} className="history-item">
+                                                            {chat.title}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </>
+                                ) : (
+                                    <div className="no-results">No matching reports found</div>
+                                )}
                             </div>
                         </div>
                     )}
