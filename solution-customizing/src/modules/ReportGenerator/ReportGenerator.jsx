@@ -8,6 +8,29 @@ const BodyContent = () => {
     const [isSearchVisible, setIsSearchVisible] = useState(false);
     const [searchInput, setSearchInput] = useState(""); 
 
+    // Sample chat history data grouped by time period
+    const chatHistory = {
+        today: [
+            { id: 1, title: "Sidebar Visibility Fix" }
+        ],
+        previous7Days: [
+            { id: 2, title: "Shirebound and Busking Men" },
+            { id: 3, title: "Best Hosting for Ecommerce" },
+            { id: 4, title: "Sidebar Scrollable Chat History" },
+            { id: 5, title: "Report Generator UI Design" },
+            { id: 6, title: "Financial Report Generator" },
+            { id: 7, title: "Sidebar Visibility Fix" },
+            { id: 8, title: "Sidebar Layout Customization" }
+        ],
+        previous30Days: [
+            { id: 9, title: "CSS UI Customization Help" },
+            { id: 10, title: "Copy to Clipboard Function" },
+            { id: 11, title: "JSX line breaks solutions" },
+            { id: 12, title: "Chatbot Report Generator" },
+            { id: 13, title: "CSS Layout Structure" }
+        ]
+    };
+
     const toggleSidebar = () => {
         setIsSidebarVisible(!isSidebarVisible);
     };
@@ -71,7 +94,7 @@ const BodyContent = () => {
             <div className="body-content-container">
                 <div className={`sidebar-container ${isSidebarVisible ? "visible" : ""}`}>
                     {isSidebarVisible && (
-                        <div>
+                        <div className="sidebar-content-wrapper">
                             {isSearchVisible ? (
                                 <div className={`search-bar-container ${isSearchVisible ? "visible" : ""}`}
                                     onTransitionEnd={() => !isSearchVisible && setSearchInput("")}>
@@ -89,23 +112,60 @@ const BodyContent = () => {
                                     </div>
                                 </div>
                             ) : (
-                                <div className='sidebar-icons-ham-icon-wrapper'>
-                                    <div className="ham-menu-icon active" onClick={toggleSidebar}>
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                    </div>
-                                    <div className="srch-new-icon">
-                                        <img 
-                                            src="../../icons/repgen/search.png" 
-                                            alt="Search" 
-                                            className="search-icon"
-                                            onClick={() => setIsSearchVisible(true)}
-                                        />
-                                        <img src="../../icons/repgen/newchat.png" alt="New" className="newchat-icon"/>
+                                <div className='sidebar-header'>
+                                    <div className="sidebar-icons-ham-icon-wrapper">
+                                        <div className="ham-menu-icon active" onClick={toggleSidebar}>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                        <div className="srch-new-icon">
+                                            <img 
+                                                src="../../icons/repgen/search.png" 
+                                                alt="Search" 
+                                                className="search-icon"
+                                                onClick={() => setIsSearchVisible(true)}
+                                            />
+                                            <img src="../../icons/repgen/newchat.png" alt="New" className="newchat-icon"/>
+                                        </div>
                                     </div>
                                 </div>
                             )}
+                            
+                            <div className="sidebar-content">
+                                <div className="history-section">
+                                    <h3 className="history-period">Today</h3>
+                                    <ul className="history-list">
+                                        {chatHistory.today.map(chat => (
+                                            <li key={chat.id} className="history-item">
+                                                {chat.title}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className="history-section">
+                                    <h3 className="history-period">Previous 7 Days</h3>
+                                    <ul className="history-list">
+                                        {chatHistory.previous7Days.map(chat => (
+                                            <li key={chat.id} className="history-item">
+                                                {chat.title}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div className="history-section">
+                                    <h3 className="history-period">Previous 30 Days</h3>
+                                    <ul className="history-list">
+                                        {chatHistory.previous30Days.map(chat => (
+                                            <li key={chat.id} className="history-item">
+                                                {chat.title}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
