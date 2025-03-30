@@ -11,23 +11,23 @@ const BodyContent = () => {
     // Sample chat history data grouped by time period
     const chatHistory = {
         today: [
-            { id: 1, title: "Sidebar Visibility Fix" }
+            { id: 1, title: "Report Placeholder 1" }
         ],
         previous7Days: [
-            { id: 2, title: "Shirebound and Busking Men" },
-            { id: 3, title: "Best Hosting for Ecommerce" },
-            { id: 4, title: "Sidebar Scrollable Chat History" },
-            { id: 5, title: "Report Generator UI Design" },
-            { id: 6, title: "Financial Report Generator" },
-            { id: 7, title: "Sidebar Visibility Fix" },
-            { id: 8, title: "Sidebar Layout Customization" }
+            { id: 2, title: "Report Placeholder 2" },
+            { id: 3, title: "Report Placeholder 3" },
+            { id: 4, title: "Report Placeholder 4" },
+            { id: 5, title: "Report Placeholder 5" },
+            { id: 6, title: "Report Placeholder 6" },
+            { id: 7, title: "Report Placeholder 7" },
+            { id: 8, title: "Report Placeholder 8" }
         ],
         previous30Days: [
-            { id: 9, title: "CSS UI Customization Help" },
-            { id: 10, title: "Copy to Clipboard Function" },
-            { id: 11, title: "JSX line breaks solutions" },
-            { id: 12, title: "Chatbot Report Generator" },
-            { id: 13, title: "CSS Layout Structure" }
+            { id: 9, title: "Report Placeholder 9" },
+            { id: 10, title: "Report Placeholder 10" },
+            { id: 11, title: "Report Placeholder 11" },
+            { id: 12, title: "Report Placeholder 12" },
+            { id: 13, title: "Report Placeholder 13" }
         ]
     };
 

@@ -478,8 +478,9 @@
 
 .sidebar-content {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding: 10px;
+    max-height: 430px;
 }
 
 .history-section {
