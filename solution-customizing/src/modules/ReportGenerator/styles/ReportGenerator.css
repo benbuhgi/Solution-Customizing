@@ -425,9 +425,9 @@
   overflow: hidden;
   background-color: #C9E7E5;
   transition: width 0.3s ease-in-out, opacity 0.2s ease-in-out;
-  position: relative; /* Changed from absolute to relative */
+  position: relative;
   opacity: 0;
-  margin: 10px; /* Added to match sidebar button spacing */
+  margin: 10px;
 }
 
 .repgen .search-bar-container.visible {
@@ -463,30 +463,29 @@
     height: 100%;
 }
 
-/* New sidebar history styles */
-.sidebar-content-wrapper {
+.repgen .sidebar-content-wrapper {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-.sidebar-header {
+.repgen .sidebar-header {
     padding: 10px;
     border-bottom: 1px solid #abd8d5;
 }
 
-.sidebar-content {
+.repgen .sidebar-content {
     flex: 1;
     overflow-y: scroll;
     padding: 10px;
     max-height: 430px;
 }
 
-.history-section {
+.repgen .history-section {
     margin-bottom: 20px;
 }
 
-.history-period {
+.repgen .history-period {
     font-size: 14px;
     font-weight: bold;
     color: #00A8A8;
@@ -495,13 +494,13 @@
     border-bottom: 1px solid #abd8d5;
 }
 
-.history-list {
+.repgen .history-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.history-item {
+.repgen .history-item {
     padding: 8px 10px;
     margin-bottom: 5px;
     border-radius: 5px;
@@ -510,25 +509,24 @@
     transition: background-color 0.2s;
 }
 
-.history-item:hover {
+.repgen .history-item:hover {
     background-color: #abd8d5;
 }
 
-/* Scrollbar styling */
-.sidebar-content::-webkit-scrollbar {
+.repgen .sidebar-content::-webkit-scrollbar {
     width: 5px;
 }
 
-.sidebar-content::-webkit-scrollbar-track {
+.repgen .sidebar-content::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
 
-.sidebar-content::-webkit-scrollbar-thumb {
+.repgen .sidebar-content::-webkit-scrollbar-thumb {
     background: #00A8A8;
     border-radius: 10px;
 }
 
-.sidebar-content::-webkit-scrollbar-thumb:hover {
+.repgen .sidebar-content::-webkit-scrollbar-thumb:hover {
     background: #008080;
 }
 

@@ -74,6 +74,15 @@ const BodyContent = () => {
         }
     };
 
+    const startNewChat = () => {
+        setMessages([]);
+        setInputText("");
+    };
+
+    const handleHistoryItemClick = (item) => { //page navigation placeholder
+        alert(`Navigate to ${item.title} page`); 
+    };
+
     const generateResponse = (prompt) => {
         if (prompt.toLowerCase().includes("financial report")) {
             return {
@@ -144,7 +153,12 @@ const BodyContent = () => {
                                                 className="search-icon"
                                                 onClick={() => setIsSearchVisible(true)}
                                             />
-                                            <img src="../../icons/repgen/newchat.png" alt="New" className="newchat-icon"/>
+                                            <img 
+                                                src="../../icons/repgen/newchat.png" 
+                                                alt="New" 
+                                                className="newchat-icon"
+                                                onClick={startNewChat}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +172,11 @@ const BodyContent = () => {
                                                 <h3 className="history-period">Today</h3>
                                                 <ul className="history-list">
                                                     {filteredChatHistory.today.map(chat => (
-                                                        <li key={chat.id} className="history-item">
+                                                        <li 
+                                                            key={chat.id} 
+                                                            className="history-item"
+                                                            onClick={() => handleHistoryItemClick(chat)}
+                                                        >
                                                             {chat.title}
                                                         </li>
                                                     ))}
@@ -171,7 +189,11 @@ const BodyContent = () => {
                                                 <h3 className="history-period">Previous 7 Days</h3>
                                                 <ul className="history-list">
                                                     {filteredChatHistory.previous7Days.map(chat => (
-                                                        <li key={chat.id} className="history-item">
+                                                        <li 
+                                                            key={chat.id} 
+                                                            className="history-item"
+                                                            onClick={() => handleHistoryItemClick(chat)}
+                                                        >
                                                             {chat.title}
                                                         </li>
                                                     ))}
@@ -184,7 +206,11 @@ const BodyContent = () => {
                                                 <h3 className="history-period">Previous 30 Days</h3>
                                                 <ul className="history-list">
                                                     {filteredChatHistory.previous30Days.map(chat => (
-                                                        <li key={chat.id} className="history-item">
+                                                        <li 
+                                                            key={chat.id} 
+                                                            className="history-item"
+                                                            onClick={() => handleHistoryItemClick(chat)}
+                                                        >
                                                             {chat.title}
                                                         </li>
                                                     ))}
