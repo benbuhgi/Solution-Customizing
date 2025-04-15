@@ -187,15 +187,21 @@
   margin-left: 10px;
   outline: none;
   height: auto;
-  min-height: 40px;
-  max-height: 300px;
+  min-height: 40px; /* Fixed minimum height */
+  max-height: 120px; /* Maximum expanded height */
   resize: none;
   overflow-y: auto;
   word-wrap: break-word;
   padding-top: 10px;
   font-size: 16px;
   font-family: inter;
-  padding-top: 15px;
+  transition: min-height 0.2s ease; /* Smooth height transition */
+  line-height: 1.5; /* Ensure consistent line height */
+}
+
+/* Add this new class for expanded state */
+.repgen .text-input.expanded {
+  height: 120px;
 }
 
 .repgen .text-input::placeholder {

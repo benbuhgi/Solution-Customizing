@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./styles/ReportGenerator.css";
 
 const BodyContent = () => {
@@ -10,35 +10,23 @@ const BodyContent = () => {
     const [conversations, setConversations] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [currentUserId, setCurrentUserId] = useState(101); // In a real app, get from auth context
-    const authToken = "dummy-token"; // In a real app, get from auth context
+    const [currentUserId, setCurrentUserId] = useState(101);
+    const authToken = "dummy-token";
+    const textareaRef = useRef(null);
 
-    // Fetch all conversations on component mount
     useEffect(() => {
         fetchConversations();
     }, []);
 
-    // Fetch user's conversations
     const fetchConversations = async () => {
         setLoading(true);
         setError(null);
         try {
-            // In a real app, this would be an actual API call
-            // const response = await fetch(`/api/users/${currentUserId}/conversations`, {
-            //     headers: {
-            //         'Authorization': `Bearer ${authToken}`
-            //     }
-            // });
-            // if (!response.ok) throw new Error('Failed to fetch conversations');
-            // const data = await response.json();
-            
-            // Mock data
             const data = [
                 { id: 1, user_id: 101, created_at: '2025-04-10T14:30:00Z', title: 'Financial Report - January 2024' },
                 { id: 2, user_id: 101, created_at: '2025-04-12T09:15:00Z', title: 'Sales Analysis Q1 2025' },
                 { id: 3, user_id: 101, created_at: '2025-04-13T16:45:00Z', title: 'Marketing Campaign Results' }
             ];
-            
             setConversations(data);
         } catch (err) {
             console.error('Error fetching conversations:', err);
@@ -48,7 +36,6 @@ const BodyContent = () => {
         }
     };
 
-    // Format chat history from conversations
     const formatChatHistory = () => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -93,7 +80,6 @@ const BodyContent = () => {
 
     const chatHistory = formatChatHistory();
 
-    // Filter chat history based on search input
     const filterChatHistory = (history) => {
         if (!searchInput.trim()) return history;
 
@@ -108,7 +94,6 @@ const BodyContent = () => {
         }, {});
     };
 
-    // Get filtered chat history
     const filteredChatHistory = filterChatHistory(chatHistory);
 
     const toggleSidebar = () => {
@@ -124,7 +109,10 @@ const BodyContent = () => {
     const handleSendMessage = () => {
         if (inputText.trim() !== "") {
             setMessages([...messages, { sender: "user", text: inputText, type: "text" }]);
-            setInputText(""); 
+            setInputText("");
+            if (textareaRef.current) {
+                textareaRef.current.style.height = '40px';
+            }
 
             setTimeout(() => {
                 const response = generateResponse(inputText);
@@ -136,13 +124,23 @@ const BodyContent = () => {
         }
     };
 
+    const handleInputChange = (e) => {
+        setInputText(e.target.value);
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${Math.min(
+                textareaRef.current.scrollHeight,
+                120
+            )}px`;
+        }
+    };
+
     const startNewChat = () => {
         setMessages([]);
         setInputText("");
     };
 
     const handleHistoryItemClick = (item) => {
-        // In a real app, this would fetch the conversation messages
         alert(`Navigate to ${item.title} page`);
     };
 
@@ -184,29 +182,24 @@ const BodyContent = () => {
         return { sender: "bot", text: "I'm not sure how to answer that yet, but I'm learning!", type: "text" };
     };
 
-    // Function to download table data as CSV
     const downloadCSV = (data, filename = 'report-data.csv') => {
         if (!data || !data.headers || !data.rows || data.rows.length === 0) {
             return;
         }
         
-        // Create CSV content
         const header = data.headers.join(',');
         const rows = data.rows.map(row => row.join(','));
         const csvContent = [header, ...rows].join('\n');
         
-        // Create download link
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         
-        // Create a temporary link element to trigger download
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', filename);
         document.body.appendChild(link);
         link.click();
         
-        // Clean up
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
     };
@@ -406,16 +399,19 @@ const BodyContent = () => {
 
                         <div className="textbar-container">
                             <textarea
+                                ref={textareaRef}
                                 placeholder="Ask anything"
                                 className="text-input"
                                 value={inputText}
-                                onChange={(e) => setInputText(e.target.value)}
+                                onChange={handleInputChange}
                                 onKeyDown={(e) => {
                                     if (e.key === "Enter" && !e.shiftKey) {
                                         e.preventDefault();
                                         handleSendMessage(); 
                                     }
                                 }}
+                                rows="1"
+                                style={{ height: '40px' }}
                             />
                             <img
                                 src="../../icons/repgen-icons/sendmsg.png"
