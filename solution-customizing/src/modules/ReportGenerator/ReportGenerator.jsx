@@ -111,7 +111,7 @@ const BodyContent = () => {
             setMessages([...messages, { sender: "user", text: inputText, type: "text" }]);
             setInputText("");
             if (textareaRef.current) {
-                textareaRef.current.style.height = '40px';
+                textareaRef.current.style.height = '30px';
             }
 
             setTimeout(() => {
@@ -130,7 +130,7 @@ const BodyContent = () => {
             textareaRef.current.style.height = 'auto';
             textareaRef.current.style.height = `${Math.min(
                 textareaRef.current.scrollHeight,
-                120
+                100
             )}px`;
         }
     };
