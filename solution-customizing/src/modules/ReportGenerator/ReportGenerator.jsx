@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles/ReportGenerator.css";
 
 const BodyContent = () => {
@@ -6,30 +6,92 @@ const BodyContent = () => {
     const [messages, setMessages] = useState([]); 
     const [inputText, setInputText] = useState("");
     const [isSearchVisible, setIsSearchVisible] = useState(false);
-    const [searchInput, setSearchInput] = useState(""); 
+    const [searchInput, setSearchInput] = useState("");
+    const [conversations, setConversations] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [currentUserId, setCurrentUserId] = useState(101); // In a real app, get from auth context
+    const authToken = "dummy-token"; // In a real app, get from auth context
 
-    // Sample chat history data grouped by time period
-    const chatHistory = {
-        today: [
-            { id: 1, title: "Report Placeholder 1" }
-        ],
-        previous7Days: [
-            { id: 2, title: "Report Placeholder 2" },
-            { id: 3, title: "Report Placeholder 3" },
-            { id: 4, title: "Report Placeholder 4" },
-            { id: 5, title: "Report Placeholder 5" },
-            { id: 6, title: "Report Placeholder 6" },
-            { id: 7, title: "Report Placeholder 7" },
-            { id: 8, title: "Report Placeholder 8" }
-        ],
-        previous30Days: [
-            { id: 9, title: "Report Placeholder 9" },
-            { id: 10, title: "Report Placeholder 10" },
-            { id: 11, title: "Report Placeholder 11" },
-            { id: 12, title: "Report Placeholder 12" },
-            { id: 13, title: "Report Placeholder 13" }
-        ]
+    // Fetch all conversations on component mount
+    useEffect(() => {
+        fetchConversations();
+    }, []);
+
+    // Fetch user's conversations
+    const fetchConversations = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            // In a real app, this would be an actual API call
+            // const response = await fetch(`/api/users/${currentUserId}/conversations`, {
+            //     headers: {
+            //         'Authorization': `Bearer ${authToken}`
+            //     }
+            // });
+            // if (!response.ok) throw new Error('Failed to fetch conversations');
+            // const data = await response.json();
+            
+            // Mock data
+            const data = [
+                { id: 1, user_id: 101, created_at: '2025-04-10T14:30:00Z', title: 'Financial Report - January 2024' },
+                { id: 2, user_id: 101, created_at: '2025-04-12T09:15:00Z', title: 'Sales Analysis Q1 2025' },
+                { id: 3, user_id: 101, created_at: '2025-04-13T16:45:00Z', title: 'Marketing Campaign Results' }
+            ];
+            
+            setConversations(data);
+        } catch (err) {
+            console.error('Error fetching conversations:', err);
+            setError('Failed to load conversations. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
+
+    // Format chat history from conversations
+    const formatChatHistory = () => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+        
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        thirtyDaysAgo.setHours(0, 0, 0, 0);
+        
+        const history = {
+            today: [],
+            previous7Days: [],
+            previous30Days: []
+        };
+        
+        conversations.forEach(conversation => {
+            const convDate = new Date(conversation.created_at);
+            
+            if (convDate >= today) {
+                history.today.push({
+                    id: conversation.id,
+                    title: conversation.title
+                });
+            } else if (convDate >= sevenDaysAgo) {
+                history.previous7Days.push({
+                    id: conversation.id,
+                    title: conversation.title
+                });
+            } else if (convDate >= thirtyDaysAgo) {
+                history.previous30Days.push({
+                    id: conversation.id,
+                    title: conversation.title
+                });
+            }
+        });
+        
+        return history;
+    };
+
+    const chatHistory = formatChatHistory();
 
     // Filter chat history based on search input
     const filterChatHistory = (history) => {
@@ -59,59 +121,6 @@ const BodyContent = () => {
             .catch(err => console.error("Failed to copy:", err));
     };
 
-    // Function to download all tables in a message as a single CSV
-    const downloadAllTablesAsCSV = (message, filename = 'report-data.csv') => {
-        if (!message || !message.tables || message.tables.length === 0) {
-            alert("No data available to download");
-            return;
-        }
-        
-        let csvContent = "";
-        
-        // Add report title as header
-        csvContent += message.title + "\n\n";
-        
-        // For each table in the message
-        message.tables.forEach((table, index) => {
-            // Add table title as a header
-            csvContent += table.title + "\n";
-            
-            // Add table headers
-            csvContent += table.headers.join(',') + "\n";
-            
-            // Add table rows
-            table.rows.forEach(row => {
-                csvContent += row.join(',') + "\n";
-            });
-            
-            // Add a blank line between tables (except after the last table)
-            if (index < message.tables.length - 1) {
-                csvContent += "\n";
-            }
-        });
-        
-        // Add summary at the end
-        if (message.title2 && message.text2) {
-            csvContent += "\n" + message.title2 + "\n";
-            csvContent += message.text2 + "\n";
-        }
-        
-        // Create download link
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        
-        // Create a temporary link element to trigger download
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-        link.click();
-        
-        // Clean up
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    };
-
     const handleSendMessage = () => {
         if (inputText.trim() !== "") {
             setMessages([...messages, { sender: "user", text: inputText, type: "text" }]);
@@ -132,8 +141,9 @@ const BodyContent = () => {
         setInputText("");
     };
 
-    const handleHistoryItemClick = (item) => { //page navigation placeholder
-        alert(`Navigate to ${item.title} page`); 
+    const handleHistoryItemClick = (item) => {
+        // In a real app, this would fetch the conversation messages
+        alert(`Navigate to ${item.title} page`);
     };
 
     const generateResponse = (prompt) => {
@@ -160,13 +170,45 @@ const BodyContent = () => {
                         title: "Expense Breakdown",
                         headers: ["Category", "Amount (PHP)"],
                         rows: [
-                            ["Salaries", "1,500,000"]
+                            ["Salaries", "1,500,000"],
+                            ["Marketing", "750,000"],
+                            ["Office Expenses", "450,000"],
+                            ["Utilities", "220,000"],
+                            ["Miscellaneous", "200,000"],
+                            ["Total", "3,120,000"]
                         ]
                     }
                 ]
             };
         }
         return { sender: "bot", text: "I'm not sure how to answer that yet, but I'm learning!", type: "text" };
+    };
+
+    // Function to download table data as CSV
+    const downloadCSV = (data, filename = 'report-data.csv') => {
+        if (!data || !data.headers || !data.rows || data.rows.length === 0) {
+            return;
+        }
+        
+        // Create CSV content
+        const header = data.headers.join(',');
+        const rows = data.rows.map(row => row.join(','));
+        const csvContent = [header, ...rows].join('\n');
+        
+        // Create download link
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        
+        // Create a temporary link element to trigger download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        
+        // Clean up
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     return (
@@ -218,7 +260,11 @@ const BodyContent = () => {
                             )}
                             
                             <div className="sidebar-content">
-                                {Object.keys(filteredChatHistory).length > 0 ? (
+                                {loading ? (
+                                    <div className="loading-message">Loading conversations...</div>
+                                ) : error ? (
+                                    <div className="error-message">{error}</div>
+                                ) : Object.keys(filteredChatHistory).length > 0 ? (
                                     <>
                                         {filteredChatHistory.today && (
                                             <div className="history-section">
@@ -346,12 +392,9 @@ const BodyContent = () => {
                                                         <img src="../../icons/repgen-icons/copy.png" alt="Copy" className="copy-icon"/>
                                                         <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Copy Summary</span>
                                                     </div>
-                                                    <div 
-                                                        className="dl-icon-wrapper" 
-                                                        onClick={() => downloadAllTablesAsCSV(msg, `${msg.title.replace(/\s+/g, '-').toLowerCase()}-report.csv`)}
-                                                    >
+                                                    <div className="dl-icon-wrapper" onClick={() => downloadCSV(msg.tables[0], 'financial-report.csv')}>
                                                         <img src="../../icons/repgen-icons/download.png" alt="Download" className="download-icon"/>
-                                                        <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Download CSV</span>
+                                                        <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Download Excel</span>
                                                     </div>
                                                 </div>
                                             </div>
