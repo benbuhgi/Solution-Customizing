@@ -11,8 +11,13 @@ const BodyContent = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [currentUserId, setCurrentUserId] = useState(101);
+    const [activeConversationId, setActiveConversationId] = useState(null);
+    const [isLoadingMessages, setIsLoadingMessages] = useState(false);
     const authToken = "dummy-token";
     const textareaRef = useRef(null);
+
+    // API base URL - would typically come from environment variables
+    const API_BASE_URL = "https://api.example.com";
 
     useEffect(() => {
         fetchConversations();
@@ -22,6 +27,13 @@ const BodyContent = () => {
         setLoading(true);
         setError(null);
         try {
+            // In a real app, this would be an actual API call
+            // const response = await fetch(`${API_BASE_URL}/conversations`, {
+            //   headers: { 'Authorization': `Bearer ${authToken}` }
+            // });
+            // const data = await response.json();
+            
+            // Mock API response
             const data = [
                 { id: 1, user_id: 101, created_at: '2025-04-10T14:30:00Z', title: 'Financial Report - January 2024' },
                 { id: 2, user_id: 101, created_at: '2025-04-12T09:15:00Z', title: 'Sales Analysis Q1 2025' },
@@ -33,6 +45,141 @@ const BodyContent = () => {
             setError('Failed to load conversations. Please try again.');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchMessages = async (conversationId) => {
+        setIsLoadingMessages(true);
+        try {
+            // In a real app, this would be an actual API call
+            // const response = await fetch(`${API_BASE_URL}/conversations/${conversationId}/messages`, {
+            //   headers: { 'Authorization': `Bearer ${authToken}` }
+            // });
+            // const data = await response.json();
+            
+            // Mock API response based on conversation ID
+            let mockMessages = [];
+            
+            switch(conversationId) {
+                case 1:
+                    mockMessages = [
+                        { sender: "user", text: "Show me the financial report for January 2024", type: "text" },
+                        generateResponse("financial report")
+                    ];
+                    break;
+                case 2:
+                    mockMessages = [
+                        { sender: "user", text: "What were the sales numbers for Q1 2025?", type: "text" },
+                        { 
+                            sender: "bot", 
+                            type: "table", 
+                            text: "Here are the sales numbers for Q1 2025:", 
+                            title: "Sales Analysis: Q1 2025",
+                            title2: "Summary",
+                            text2: "Total Sales: PHP 8,750,000 | Growth Rate: 12% | Top Product: Model X-200",
+                            tables: [
+                                {
+                                    title: "Quarterly Sales Breakdown",
+                                    headers: ["Month", "Amount (PHP)", "Growth"],
+                                    rows: [
+                                        ["January", "2,500,000", "8%"],
+                                        ["February", "2,800,000", "10%"],
+                                        ["March", "3,450,000", "15%"],
+                                        ["Total", "8,750,000", "12%"]
+                                    ]
+                                }
+                            ]
+                        }
+                    ];
+                    break;
+                case 3:
+                    mockMessages = [
+                        { sender: "user", text: "Show results from the recent marketing campaign", type: "text" },
+                        { 
+                            sender: "bot", 
+                            type: "table", 
+                            text: "Here are the marketing campaign results:", 
+                            title: "Marketing Campaign: Spring 2025",
+                            title2: "Summary",
+                            text2: "Total Reach: 1.2M | Conversion Rate: 4.5% | ROI: 3.2x",
+                            tables: [
+                                {
+                                    title: "Campaign Metrics",
+                                    headers: ["Metric", "Value"],
+                                    rows: [
+                                        ["Impressions", "1,200,000"],
+                                        ["Clicks", "54,000"],
+                                        ["Conversions", "2,430"],
+                                        ["Cost", "PHP 850,000"],
+                                        ["Revenue", "PHP 2,720,000"]
+                                    ]
+                                }
+                            ]
+                        }
+                    ];
+                    break;
+                default:
+                    mockMessages = [];
+            }
+            
+            setMessages(mockMessages);
+            setActiveConversationId(conversationId);
+        } catch (err) {
+            console.error('Error fetching messages:', err);
+            setError('Failed to load conversation. Please try again.');
+        } finally {
+            setIsLoadingMessages(false);
+        }
+    };
+
+    const createNewConversation = async () => {
+        try {
+            // In a real app, this would be an actual API call
+            // const response = await fetch(`${API_BASE_URL}/conversations`, {
+            //   method: 'POST',
+            //   headers: { 
+            //     'Authorization': `Bearer ${authToken}`,
+            //     'Content-Type': 'application/json'
+            //   },
+            //   body: JSON.stringify({ title: 'New Conversation' })
+            // });
+            // const newConversation = await response.json();
+            
+            // Mock API response
+            const newConversation = {
+                id: Math.max(0, ...conversations.map(c => c.id)) + 1,
+                user_id: currentUserId,
+                created_at: new Date().toISOString(),
+                title: 'New Conversation'
+            };
+            
+            setConversations([newConversation, ...conversations]);
+            setMessages([]);
+            setActiveConversationId(newConversation.id);
+        } catch (err) {
+            console.error('Error creating conversation:', err);
+            setError('Failed to create new conversation. Please try again.');
+        }
+    };
+
+    const saveMessage = async (conversationId, message) => {
+        try {
+            // In a real app, this would be an actual API call
+            // const response = await fetch(`${API_BASE_URL}/conversations/${conversationId}/messages`, {
+            //   method: 'POST',
+            //   headers: { 
+            //     'Authorization': `Bearer ${authToken}`,
+            //     'Content-Type': 'application/json'
+            //   },
+            //   body: JSON.stringify(message)
+            // });
+            // return await response.json();
+            
+            // In this mock implementation, we just return the message
+            return message;
+        } catch (err) {
+            console.error('Error saving message:', err);
+            throw err;
         }
     };
 
@@ -60,17 +207,20 @@ const BodyContent = () => {
             if (convDate >= today) {
                 history.today.push({
                     id: conversation.id,
-                    title: conversation.title
+                    title: conversation.title,
+                    active: activeConversationId === conversation.id
                 });
             } else if (convDate >= sevenDaysAgo) {
                 history.previous7Days.push({
                     id: conversation.id,
-                    title: conversation.title
+                    title: conversation.title,
+                    active: activeConversationId === conversation.id
                 });
             } else if (convDate >= thirtyDaysAgo) {
                 history.previous30Days.push({
                     id: conversation.id,
-                    title: conversation.title
+                    title: conversation.title,
+                    active: activeConversationId === conversation.id
                 });
             }
         });
@@ -106,21 +256,36 @@ const BodyContent = () => {
             .catch(err => console.error("Failed to copy:", err));
     };
 
-    const handleSendMessage = () => {
+    const handleSendMessage = async () => {
         if (inputText.trim() !== "") {
-            setMessages([...messages, { sender: "user", text: inputText, type: "text" }]);
-            setInputText("");
-            if (textareaRef.current) {
-                textareaRef.current.style.height = '30px';
+            const userMessage = { sender: "user", text: inputText, type: "text" };
+            
+            // If no active conversation, create one first
+            if (!activeConversationId) {
+                await createNewConversation();
             }
+            
+            // Save user message
+            try {
+                await saveMessage(activeConversationId, userMessage);
+                setMessages([...messages, userMessage]);
+                setInputText("");
+                
+                if (textareaRef.current) {
+                    textareaRef.current.style.height = '30px';
+                }
 
-            setTimeout(() => {
-                const response = generateResponse(inputText);
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    response
-                ]);
-            }, 1000); 
+                // Generate and save bot response
+                setTimeout(async () => {
+                    const botResponse = generateResponse(inputText);
+                    await saveMessage(activeConversationId, botResponse);
+                    setMessages(prev => [...prev, botResponse]);
+                }, 1000);
+                
+            } catch (err) {
+                console.error('Error sending message:', err);
+                setError('Failed to send message. Please try again.');
+            }
         }
     };
 
@@ -135,13 +300,9 @@ const BodyContent = () => {
         }
     };
 
-    const startNewChat = () => {
-        setMessages([]);
-        setInputText("");
-    };
-
-    const handleHistoryItemClick = (item) => {
-        alert(`Navigate to ${item.title} page`);
+    const startNewChat = async () => {
+        await createNewConversation();
+        setIsSidebarVisible(false);
     };
 
     const generateResponse = (prompt) => {
@@ -266,8 +427,8 @@ const BodyContent = () => {
                                                     {filteredChatHistory.today.map(chat => (
                                                         <li 
                                                             key={chat.id} 
-                                                            className="history-item"
-                                                            onClick={() => handleHistoryItemClick(chat)}
+                                                            className={`history-item ${chat.active ? 'active' : ''}`}
+                                                            onClick={() => fetchMessages(chat.id)}
                                                         >
                                                             {chat.title}
                                                         </li>
@@ -283,8 +444,8 @@ const BodyContent = () => {
                                                     {filteredChatHistory.previous7Days.map(chat => (
                                                         <li 
                                                             key={chat.id} 
-                                                            className="history-item"
-                                                            onClick={() => handleHistoryItemClick(chat)}
+                                                            className={`history-item ${chat.active ? 'active' : ''}`}
+                                                            onClick={() => fetchMessages(chat.id)}
                                                         >
                                                             {chat.title}
                                                         </li>
@@ -300,8 +461,8 @@ const BodyContent = () => {
                                                     {filteredChatHistory.previous30Days.map(chat => (
                                                         <li 
                                                             key={chat.id} 
-                                                            className="history-item"
-                                                            onClick={() => handleHistoryItemClick(chat)}
+                                                            className={`history-item ${chat.active ? 'active' : ''}`}
+                                                            onClick={() => fetchMessages(chat.id)}
                                                         >
                                                             {chat.title}
                                                         </li>
@@ -334,92 +495,98 @@ const BodyContent = () => {
                     </div>
 
                     <div className="main-content-container">
-                        <div className="chat-history">
-                            {messages.length === 0 ? (
-                                <div className="welres-container">
-                                    <h1 className="welc-text">Hello, Crusch K.</h1>
-                                </div>
-                            ) : (
-                                messages.map((msg, index) => (
-                                    <div key={index} className={`chat-message ${msg.sender}`}>
-                                        {msg.type === "text" ? (
-                                            <div className="message-text">
-                                                {msg.text.split("\n").map((line, i) => (
-                                                    <React.Fragment key={i}>
-                                                        {line}
-                                                        <br />
-                                                    </React.Fragment>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <div className="chat-table-response">
-                                                <p className="res-head">{msg.text}</p>
-                                                <h3>{msg.title}</h3>
-                                                {msg.tables.map((table, i) => (
-                                                    <div key={i}>
-                                                        <h4>{table.title}</h4>
-                                                        <table className="chat-table">
-                                                            <thead>
-                                                                <tr>
-                                                                    {table.headers.map((header, j) => (
-                                                                        <th key={j}>{header}</th>
-                                                                    ))}
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {table.rows.map((row, k) => (
-                                                                    <tr key={k}>
-                                                                        {row.map((cell, l) => (
-                                                                            <td key={l}>{cell}</td>
+                        {isLoadingMessages ? (
+                            <div className="loading-message">Loading conversation...</div>
+                        ) : (
+                            <>
+                                <div className="chat-history">
+                                    {messages.length === 0 ? (
+                                        <div className="welres-container">
+                                            <h1 className="welc-text">Hello, Crusch K.</h1>
+                                        </div>
+                                    ) : (
+                                        messages.map((msg, index) => (
+                                            <div key={index} className={`chat-message ${msg.sender}`}>
+                                                {msg.type === "text" ? (
+                                                    <div className="message-text">
+                                                        {msg.text.split("\n").map((line, i) => (
+                                                            <React.Fragment key={i}>
+                                                                {line}
+                                                                <br />
+                                                            </React.Fragment>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <div className="chat-table-response">
+                                                        <p className="res-head">{msg.text}</p>
+                                                        <h3>{msg.title}</h3>
+                                                        {msg.tables.map((table, i) => (
+                                                            <div key={i}>
+                                                                <h4>{table.title}</h4>
+                                                                <table className="chat-table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            {table.headers.map((header, j) => (
+                                                                                <th key={j}>{header}</th>
+                                                                            ))}
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {table.rows.map((row, k) => (
+                                                                            <tr key={k}>
+                                                                                {row.map((cell, l) => (
+                                                                                    <td key={l}>{cell}</td>
+                                                                                ))}
+                                                                            </tr>
                                                                         ))}
-                                                                    </tr>
-                                                                ))}
-                                                            </tbody>
-                                                        </table>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        ))}
+                                                        <p className="res-foot">{msg.title2}</p>
+                                                        <p className="foot-cont">{msg.text2}</p>
+                                                        <div className="action-buttons">
+                                                            <div className="copy-icon-wrapper" onClick={() => copyToClipboard(`${msg.title}\n${msg.text2}`)}>
+                                                                <img src="../../icons/repgen-icons/copy.png" alt="Copy" className="copy-icon"/>
+                                                                <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Copy Summary</span>
+                                                            </div>
+                                                            <div className="dl-icon-wrapper" onClick={() => downloadCSV(msg.tables[0], 'financial-report.csv')}>
+                                                                <img src="../../icons/repgen-icons/download.png" alt="Download" className="download-icon"/>
+                                                                <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Download CSV</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                ))}
-                                                <p className="res-foot">{msg.title2}</p>
-                                                <p className="foot-cont">{msg.text2}</p>
-                                                <div className="action-buttons">
-                                                    <div className="copy-icon-wrapper" onClick={() => copyToClipboard(`${msg.title}\n${msg.text2}`)}>
-                                                        <img src="../../icons/repgen-icons/copy.png" alt="Copy" className="copy-icon"/>
-                                                        <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Copy Summary</span>
-                                                    </div>
-                                                    <div className="dl-icon-wrapper" onClick={() => downloadCSV(msg.tables[0], 'financial-report.csv')}>
-                                                        <img src="../../icons/repgen-icons/download.png" alt="Download" className="download-icon"/>
-                                                        <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Download Excel</span>
-                                                    </div>
-                                                </div>
+                                                )}
                                             </div>
-                                        )}
-                                    </div>
-                                ))
-                            )}
-                        </div>
+                                        ))
+                                    )}
+                                </div>
 
-                        <div className="textbar-container">
-                            <textarea
-                                ref={textareaRef}
-                                placeholder="Ask anything"
-                                className="text-input"
-                                value={inputText}
-                                onChange={handleInputChange}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter" && !e.shiftKey) {
-                                        e.preventDefault();
-                                        handleSendMessage(); 
-                                    }
-                                }}
-                                rows="1"
-                                style={{ height: '40px' }}
-                            />
-                            <img
-                                src="../../icons/repgen-icons/sendmsg.png"
-                                className="sendmsg-icon"
-                                onClick={handleSendMessage}
-                                alt="Send"
-                            />
-                        </div>
+                                <div className="textbar-container">
+                                    <textarea
+                                        ref={textareaRef}
+                                        placeholder="Ask anything"
+                                        className="text-input"
+                                        value={inputText}
+                                        onChange={handleInputChange}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter" && !e.shiftKey) {
+                                                e.preventDefault();
+                                                handleSendMessage(); 
+                                            }
+                                        }}
+                                        rows="1"
+                                        style={{ height: '40px' }}
+                                    />
+                                    <img
+                                        src="../../icons/repgen-icons/sendmsg.png"
+                                        className="sendmsg-icon"
+                                        onClick={handleSendMessage}
+                                        alt="Send"
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
