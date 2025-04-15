@@ -59,6 +59,59 @@ const BodyContent = () => {
             .catch(err => console.error("Failed to copy:", err));
     };
 
+    // Function to download all tables in a message as a single CSV
+    const downloadAllTablesAsCSV = (message, filename = 'report-data.csv') => {
+        if (!message || !message.tables || message.tables.length === 0) {
+            alert("No data available to download");
+            return;
+        }
+        
+        let csvContent = "";
+        
+        // Add report title as header
+        csvContent += message.title + "\n\n";
+        
+        // For each table in the message
+        message.tables.forEach((table, index) => {
+            // Add table title as a header
+            csvContent += table.title + "\n";
+            
+            // Add table headers
+            csvContent += table.headers.join(',') + "\n";
+            
+            // Add table rows
+            table.rows.forEach(row => {
+                csvContent += row.join(',') + "\n";
+            });
+            
+            // Add a blank line between tables (except after the last table)
+            if (index < message.tables.length - 1) {
+                csvContent += "\n";
+            }
+        });
+        
+        // Add summary at the end
+        if (message.title2 && message.text2) {
+            csvContent += "\n" + message.title2 + "\n";
+            csvContent += message.text2 + "\n";
+        }
+        
+        // Create download link
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        
+        // Create a temporary link element to trigger download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        
+        // Clean up
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     const handleSendMessage = () => {
         if (inputText.trim() !== "") {
             setMessages([...messages, { sender: "user", text: inputText, type: "text" }]);
@@ -148,13 +201,13 @@ const BodyContent = () => {
                                         </div>
                                         <div className="srch-new-icon">
                                             <img 
-                                                src="../../icons/repgen/search.png" 
+                                                src="../../icons/repgen-icons/search.png" 
                                                 alt="Search" 
                                                 className="search-icon"
                                                 onClick={() => setIsSearchVisible(true)}
                                             />
                                             <img 
-                                                src="../../icons/repgen/newchat.png" 
+                                                src="../../icons/repgen-icons/newchat.png" 
                                                 alt="New" 
                                                 className="newchat-icon"
                                                 onClick={startNewChat}
@@ -290,12 +343,15 @@ const BodyContent = () => {
                                                 <p className="foot-cont">{msg.text2}</p>
                                                 <div className="action-buttons">
                                                     <div className="copy-icon-wrapper" onClick={() => copyToClipboard(`${msg.title}\n${msg.text2}`)}>
-                                                        <img src="../../icons/repgen/copy.png" alt="Copy" className="copy-icon"/>
+                                                        <img src="../../icons/repgen-icons/copy.png" alt="Copy" className="copy-icon"/>
                                                         <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Copy Summary</span>
                                                     </div>
-                                                    <div className="dl-icon-wrapper">
-                                                        <img src="../../icons/repgen/download.png" alt="Download" className="download-icon"/>
-                                                        <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Download Excel</span>
+                                                    <div 
+                                                        className="dl-icon-wrapper" 
+                                                        onClick={() => downloadAllTablesAsCSV(msg, `${msg.title.replace(/\s+/g, '-').toLowerCase()}-report.csv`)}
+                                                    >
+                                                        <img src="../../icons/repgen-icons/download.png" alt="Download" className="download-icon"/>
+                                                        <span className={`tooltip ${index === messages.length - 1 ? 'right-aligned' : ''}`}>Download CSV</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -319,7 +375,7 @@ const BodyContent = () => {
                                 }}
                             />
                             <img
-                                src="../../icons/repgen/sendmsg.png"
+                                src="../../icons/repgen-icons/sendmsg.png"
                                 className="sendmsg-icon"
                                 onClick={handleSendMessage}
                                 alt="Send"

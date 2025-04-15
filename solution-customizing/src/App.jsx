@@ -133,8 +133,6 @@ function App() {
       "Recruitment": "Recruitment",
     },
     "Report Generator": {
-      "Custom Reports": "CustomReports",
-      "Data Visualization": "DataVisualization",
     },
   };
 
